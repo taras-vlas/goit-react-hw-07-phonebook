@@ -1,45 +1,59 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import styles from "./ContactForm.module.css";
+import { useAlert } from "react-alert";
+import { getAllContacts } from '../../redux/phonebook/phonebook-selectors';
+import operations from '../../redux/phonebook/phonebook-operations';
 
-//import phonebookActions from '../../redux/phonebook/phonebook-actions';
-import phonebookOperations from '../../redux/phonebook/phonebook-operations';
+//const INITIAL_STATE = {
+const initialState = {
+  id: '',  
+  name: '',
+  number: '',
+};
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: ''
-  };
+const Contacts = () => {
+  const alert = useAlert();
+  const dispatch = useDispatch();
+ 
+  const contacts = useSelector(getAllContacts);
+  //const [state, setState] = useState(INITIAL_STATE);
+  const [state, setState] = useState(initialState);
+  const { name, number } = state;
 
-  handleChange = ({ target }) => {
-    const { name, value } = target;
+  const handleSaveItem = (item) => dispatch(operations.addContact(item));
 
-    this.setState({
-      [name]: value,
-    })
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  };
+    const newItem = {
+      id: uuidv4(), 
+      name,
+      number: Number(number),
+    };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { name, number } = this.state;
-
-    if (name && number) {
-      this.props.onCreateContact(this.state.name, this.state.number);
-      return this.setState({ name: '', number: '' });  // alert (...) is already in contacts`);
+    if (contacts.some((contact) => contact.name === newItem.name)) {
+      alert.show(`${newItem.name} is already in your contacts`);
+      return;
     }
 
-    return null;
+    handleSaveItem(newItem);
   };
 
+  const handleChange = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-  render() {
-
+    
     return (
-      <form className={styles.Form} onSubmit={this.handleSubmit}>
+      <form className={styles.Form} onSubmit={handleSubmit}>
         
-<label className={styles.Label}>
+          <label className={styles.Label}>
             Name
             <input
                 className={styles.Input}
@@ -48,10 +62,11 @@ class ContactForm extends Component {
                 pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
                 title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
                 required
-                value={this.state.name}
-                onChange={this.handleChange}
+                value={name}  // // {this.state.name} -  значення передає в локальний стейт
+                onChange={handleChange}
             />
           </label>
+        
           <label className={styles.Label}>
             Number
             <input
@@ -61,26 +76,20 @@ class ContactForm extends Component {
                 pattern="(\+?( |-|\.)?\d{1,2}( |-|\.)?)?(\(?\d{3}\)?|\d{3})( |-|\.)?(\d{3}( |-|\.)?\d{4})"
                 title="Номер телефона должен состоять из 11-12 цифр и может содержать цифры, пробелы, тире, пузатые скобки и может начинаться с +"
                 required
-                value={this.state.number}
-                onChange={this.handleChange}
+                value={number}      // {this.state.number}
+                onChange={ handleChange }
             />
           </label>
+        
             <button className={styles.Button} type="submit">
               Add contact
             </button>
       </form>
     )
-  }
 }
 
-const mapDispatchToProps = {
-  onCreateContact: phonebookOperations.addContact,
+Contacts.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
-ContactForm.propTypes = {
-  onCreateContact: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-};
-
-export default connect(null, mapDispatchToProps)  (ContactForm);
+export default Contacts;

@@ -1,8 +1,6 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-//import phonebookActions from '../../redux/phonebook/phonebook-actions';
-import phonebookOperations from '../../redux/phonebook/phonebook-operations';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../../redux/phonebook/phonebook-actions";
+import { getFilter } from "../../redux/phonebook/phonebook-selectors";
 
     import { createUseStyles } from 'react-jss';
 
@@ -32,40 +30,38 @@ import phonebookOperations from '../../redux/phonebook/phonebook-operations';
             }
         });
 
-function Filter({ contacts,  value, onChangeFilter }) {
+
+const ContactFilter = () => {
   const classes = useStyles();
+  
+  const dispatch = useDispatch();
+  
+  const filter = useSelector(getFilter);         //from redux
+  
+  const handleFilter = (filterText) =>
+    dispatch(actions.changeFilter(filterText));
 
-  if (contacts.length > 1) {
-    return (
-      <div className = {classes.Label}>
-        Find contacts by name
-        <input className={classes.Input}
-          type="text"
-          name="filter"
-          value={value}
-          onChange={event => onChangeFilter(event.target.value)} />
-      </div>
-    )
-  }
+  const handleChange = (e) => {
+    const filter = e.target.value;
 
-  return null;
-}
-
-const mapStateToProps = state => {
-  return {
-    contacts: state.phonebook.contacts,
-    value: state.phonebook.filter,
+    handleFilter(filter);
   };
+
+
+  return (
+    <div className = {classes.Label}>
+        Find contacts by name
+        <input
+          type="text"
+          value={filter}
+          name="filter"
+          onChange={handleChange}
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+          required
+        />
+    </div>
+  );
 };
 
-const mapDispatchToProps = {
-  onChangeFilter: phonebookOperations.changeFilter,
-};
-
-Filter.propTypes = {
-  contacts: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onchangeFilter: PropTypes.func.isRequired,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)  (Filter);
+export default ContactFilter;

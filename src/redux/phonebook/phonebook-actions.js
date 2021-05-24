@@ -1,61 +1,37 @@
 import { createAction } from '@reduxjs/toolkit';
 
-export const fetchContactsRequest = createAction('contacts/fetchContactsRequest');
-export const fetchContactsSuccess = createAction('contacts/fetchContactsSuccess');
-export const fetchContactsError =   createAction('contacts/fetchContactsError');
-
-export const addContactRequest = createAction('contacts/addContactRequest');
-export const addContactSuccess = createAction('contacts/addContactSuccess');
-export const addContactError =   createAction('contacts/addContactError');
-
-export const deleteContactRequest = createAction('contacts/deleteContactRequest',);
-export const deleteContactSuccess = createAction('contacts/deleteContactSuccess',);
-export const deleteContactError =   createAction('contacts/deleteContactError',);
-
-export const changeFilter = createAction('contacts/changeFilter');
-
-
-
-
+// Create Action для отримання списку контактів
+const fetchContactsRequest = createAction('phonebook/fetchContactsRequest');
+const fetchContactsSuccess = createAction('phonebook/fetchContactsSuccess');
+const fetchContactsError =   createAction('phonebook/fetchContactsError');
+// Create Action для додавання контактів
+const addContactRequest = createAction('phonebook/addContactRequest');
+const addContactSuccess = createAction('phonebook/addContactSuccess');
+const addContactError =   createAction('phonebook/addContactError');
+// Create Action для видалення контактів
+const deleteContactRequest = createAction('phonebook/deleteContactRequest',);
+const deleteContactSuccess = createAction('phonebook/deleteContactSuccess',);
+const deleteContactError =   createAction('phonebook/deleteContactError',);
+// Create Action для фільтра
+const changeFilter = createAction('phonebook/changeFilter');
+//export const changeFilter = createAction('phonebook/changeFilter');
 
 
-// import phonebookActionsTypes from './phonebook-actions-types';
-// import { v4 as uuidv4 } from 'uuid';         //версія 4 ("на случайных данных")
-// import { createAction } from '@reduxjs/toolkit';
+          // eslint-disable-next-line
+export default {
+  fetchContactsRequest,
+  fetchContactsSuccess,
+  fetchContactsError,
 
-
-// const addContact = createAction(phonebookActionsTypes.ADD, (name, number) => {
-//   return {
-//     type: phonebookActionsTypes.ADD,
-//     payload: { contact: {
-//                   id: uuidv4(),
-//                   name,
-//                   number
-//                 }
-//     }
-//   }
-// });
-
-// const deleteContact = createAction( phonebookActionsTypes.DELETE );
-
-// const changeFilter = createAction( phonebookActionsTypes.FILTER );
+  addContactRequest,
+  addContactSuccess,
+  addContactError,
   
-// export default { addContact, deleteContact, changeFilter };
+  deleteContactRequest,
+  deleteContactSuccess,
+  deleteContactError,
+  
+  changeFilter
+};
 
 
-
-
-
-
-// const addContact = ({name, number}) => ({ 
-//   type: phonebookActionsTypes.ADD,
-//   payload: { contact: { id: uuidv4(), name, number }},
-// });
-// const deleteContact = (id) => ({
-//   type: phonebookActionsTypes.DELETE,
-//   payload: { id },
-// }); 
-// const changeFilter = (filter) => ({
-//   type: phonebookActionsTypes.FILTER,
-//   payload: { filter },
-// });

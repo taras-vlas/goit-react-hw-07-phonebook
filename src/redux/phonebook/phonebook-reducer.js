@@ -1,140 +1,82 @@
-import { combineReducers } from 'redux';
-import { createReducer } from '@reduxjs/toolkit';
-import {
-  fetchContactsRequest,
-  fetchContactsSuccess,
-  fetchContactsError,
+import { combineReducers } from "redux";
 
-  addContactRequest,
-  addContactSuccess,
-  addContactError,
-  
-  deleteContactRequest,
-  deleteContactError,
-  deleteContactSuccess,
-  changeFilter } from './phonebook-actions';
+const initialState = {
+  isLoading: false,
+  error: "",
+  contacts: {
+    items: [
+        //{ id: null, name: "", number: null },
+        { id: "id-1", name: "Rosie Simpson", number: "+38-044-459-1256" },
+        { id: "id-2", name: "Hermione Kline", number: "+38-041-443-8912" },
+        { id: "id-3", name: "Eden Clements", number: "+38-048-645-1779" },
+        { id: "id-4", name: "Annie Copeland", number: "+38-042-227-9126" },
+    ],
+    filter: "",
+  },
+};
 
-const initContacts = [
-  { id: "id-1", name: "Rosie Simpson", number: "+38-044-459-1256" },
-  { id: "id-2", name: "Hermione Kline", number: "+38-041-443-8912" },
-  { id: "id-3", name: "Eden Clements", number: "+38-048-645-1779" },
-  { id: "id-4", name: "Annie Copeland", number: "+38-042-227-9126" },
-];
+const isLoading = (state = initialState.isLoading, action) => {
+  const { type } = action;
 
-                            /* reducers */
-const contacts = createReducer(initContacts, {
-  [fetchContactsSuccess]: (_, { payload }) => payload,
-  [addContactSuccess]: (state, { payload }) => [...state, payload],
-  [deleteContactSuccess]: (state, { payload }) =>
-    state.filter(({ id }) => id !== payload),
-});
+  switch (type) {
+    case "phonebook/fetchContactRequest":    //case "phonebook/fetchContactRequest":    
+    case "phonebook/addContactRequest":
+    case "phonebook/deleteContactRequest":
+      return true;
+    
+    case "phonebook/fetchContactsSuccess":
+    case "phonebook/fetchContactsError":
+    case "phonebook/addContactSuccess":
+    case "phonebook/addContactError":
+    case "phonebook/deleteContactSuccess":
+    case "phonebook/deleteContactError":
+      return false;
+    
+    default:
+      return state;
+  }
+};
 
-const filter = createReducer('', {
-  [changeFilter]: (_, { payload }) => payload,
-});
+const error = (state = initialState.isLoading, action) => {
+  const { type, payload } = action;
 
-const loading = createReducer(false, {
-  [fetchContactsRequest]: () => true,
-  [fetchContactsSuccess]: () => false,
-  [fetchContactsError]: () => false,
+  switch (type) {
+    case "phonebook/fetchContactsError":
+    case "phonebook/addContactError":
+    case "phonebook/deleteContactError":
+      return payload;
+    default:
+      return state;
+  }
+};
 
-  [addContactRequest]: () => true,
-  [addContactSuccess]: () => false,
-  [addContactError]: () => false,
+const items = (state = initialState.contacts.items, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "phonebook/fetchContactsSuccess":
+      return payload;
+    case "phonebook/addContactSuccess":
+      return [...state, payload];
 
-  [deleteContactRequest]: () => true,
-  [deleteContactSuccess]: () => false,
-  [deleteContactError]: () => false
-});
+    case "phonebook/deleteContactSuccess":
+      return [...state.filter(({ id }) => payload !== id)];
+    default:
+      return state;
+  }
+};
 
-export default combineReducers({ contacts, filter, loading });
+const filter = (state = initialState.contacts.filter, action ) => {
+  const { payload } = action;
+  switch (action.type) {
+    case "phonebook/ChangeFilter":
+      return payload;
+    default:
+      return state;
+  }
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { combineReducers } from 'redux';
-// import { createReducer } from '@reduxjs/toolkit';
-// import phonebookActions from './phonebook-actions';
-
-// const initContacts = [
-//   { id: "id-1", name: "Rosie Simpson", number: "+38-044-459-1256" },
-//   { id: "id-2", name: "Hermione Kline", number: "+38-041-443-8912" },
-//   { id: "id-3", name: "Eden Clements", number: "+38-048-645-1779" },
-//   { id: "id-4", name: "Annie Copeland", number: "+38-042-227-9126" },
-// ];
-
-
-// const addContact = (state, action) => {
-//   if (state.find(contact => contact.name === action.payload.contact.name)) {
-//     alert(`${action.payload.contact.name} is already in contacts`);
-//     return state
-//   }
-
-//   return [...state, action.payload.contact]
-// }
-
-// const deleteContact = (state, action) => {
-//   return state.filter(({ id }) => id !== action.payload);
-// }
-
-// const changeFilter = (state, action) => {
-//   return action.payload
-// }
-
-//                             /* reducers */
-// const contacts = createReducer(initContacts, {  
-//   [phonebookActions.addContact]: addContact,
-//   [phonebookActions.deleteContact]: deleteContact,
-// });
-
-// const filter = createReducer ('', {
-//   [phonebookActions.changeFilter]: changeFilter,
-// });
-
-
-// export default combineReducers({ contacts, filter });
+export default combineReducers({ items, filter, isLoading, error });
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-// import { createReducer } from "@reduxjs/toolkit";
-// import {addContact, deleteContact, changeFilter } from "./phonebook-actions";
-
-
-// const contacts = [
-//   { id: "id-1", name: "Rosie Simpson", number: "+38-044-459-1256" },
-//   { id: "id-2", name: "Hermione Kline", number: "+38-041-443-8912" },
-//   { id: "id-3", name: "Eden Clements", number: "+38-048-645-1779" },
-//   { id: "id-4", name: "Annie Copeland", number: "+38-042-227-9126" },
-// ];
-
-// const contactsReducer = createReducer(contacts, {
-//   [addContact]: (state, { payload }) => [...state, payload],
-//   [deleteContact]: (state, { payload }) =>
-//     state.filter((contact) => contact.id !== payload),
-//  //[getContactsFromLS]: (state, { payload }) => payload,
-//   [changeFilter]: (state, { payload }) => payload,
-// });
-
-// export default contactsReducer;

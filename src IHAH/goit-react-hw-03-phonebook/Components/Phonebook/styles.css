@@ -1,0 +1,48 @@
+.conteiner-pb {
+  margin: 0 auto;
+  width: 300px;
+}
+
+.phonebook-form {
+  outline: 1px solid black;
+
+  padding: 10px;
+}
+
+.phonebook-form p {
+  font-size: 14px;
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+.phonebook-form input {
+  margin-bottom: 10px;
+}
+
+.phonebook-form button {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0px;
+}
+
+.contact-list li {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.contact-list span {
+  margin-right: 5px;
+}
+
+.contact-list button {
+  background-color: #004aff;
+  color: wheat;
+  border: 1px solid #eee;
+  padding: 5px 20px;
+  margin: 2px 5px;
+}

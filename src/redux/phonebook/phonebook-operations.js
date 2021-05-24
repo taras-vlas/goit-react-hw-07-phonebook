@@ -1,53 +1,55 @@
 import axios from 'axios';
+// import {
+//   fetchContactsRequest,
+//   fetchContactsSuccess,
+//   fetchContactsError,
 
-import {
-  fetchContactsRequest,
-  fetchContactsSuccess,
-  fetchContactsError,
-
-  addContactRequest,
-  addContactSuccess,
-  addContactError,
+//   addContactRequest,
+//   addContactSuccess,
+//   addContactError,
   
-  deleteContactRequest,
-  deleteContactError,
-  deleteContactSuccess,
-  // changeFilter
-               } from './phonebook-actions';
+//   deleteContactRequest,
+//   deleteContactSuccess,
+//   deleteContactError,
+//   } from './phonebook-actions';
+import actions from './phonebook-actions';
+  
 
 axios.defaults.baseURL = 'http://localhost:4040';
 
-const fetchContacts = () => async dispatch => {
-  dispatch(fetchContactsRequest());
-
-  try {
-    const { data } = await axios.get('/contacts');
-    dispatch(fetchContactsSuccess(data));
-  } catch (error) {
-    dispatch(fetchContactsError(error));
-  }
-};
-
-const addContact = ({ name, number }) => dispatch => {
-  const contact = { name, number };
-
-  dispatch(addContactRequest);
+// Отримання списка контактів 
+const getAllContacts = () =>  (dispatch) => {
+  dispatch(actions.fetchContactsRequest());
 
   axios
-    .post('/contacts', contact)
-    .then(({ data }) => dispatch(addContactSuccess(data)))
-    .catch(error => dispatch(addContactError(error)));
+    .get("/contacts")
+    .then(({ data }) => dispatch(actions.fetchContactsSuccess(data)))
+    .catch((error) => dispatch(actions.fetchContactsError(error)));
 };
 
-const deleteContact = contactId => dispatch => {
-  dispatch(deleteContactRequest());
+// Додавання контактів 
+const addContact = ({ name, number }) => (dispatch) => {
+  const contacts = { name, number };  
+  dispatch(actions.addContactRequest());
+
   axios
-    .delete(`/contacts/${contactId}`)
-    .then(() => dispatch(deleteContactSuccess(contactId)))
-    .catch(error => dispatch(deleteContactError(error)));
+    .post("/contacts", contacts)   
+    .then(({ data }) => dispatch(actions.addContactSuccess(data)))
+    .catch(error => dispatch(actions.addContactError(error)));
 };
 
-export default { addContact, deleteContact, fetchContacts };
+// Видалення контактів 
+const deleteContact = id => (dispatch) => {
+  dispatch(actions.deleteContactRequest());
+
+  axios
+    .delete(`/contacts/${id}`)
+    .then(() => dispatch(actions.deleteContactSuccess(id)))
+    .catch(error => dispatch(actions.deleteContactError(error)));
+};
+
+          // eslint-disable-next-line
+export default { getAllContacts, addContact, deleteContact };
 
 
 

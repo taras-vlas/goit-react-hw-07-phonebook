@@ -1,27 +1,50 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from "react-redux";
+import operations from "../../redux/phonebook/phonebook-operations";
+import { getContactID } from "../../redux/phonebook/phonebook-selectors";
 import styles from "./Contact-ListItem.module.css";
 
-const ContactListItem = ({ name, number, onDelete }) => {
+
+const ContactItem = ({ contactID }) => {
+  
+  const dispatch = useDispatch();
+
+  const contact = useSelector(getContactID(contactID)); //from redux
+  const { id, name, number } = contact;
+
+  const handleDeleteItem = () => dispatch(operations.deleteContact(id));
+
   return (
-    <li className= {styles.List_item}>
-      {"• " + name + ":   " + number}
+    <li  className= {styles.List_item} key={id}>         
+       {"• " + name + ":   " + number}
       <button className={styles.List_button}
+              id={id}
               type="button"
               name="delete"
-              onClick={onDelete}
+              onClick={handleDeleteItem}
       >
-          Delete
+        Delete
       </button>
     </li>
-  )
-}
-
-ContactListItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired
+  );
 };
 
-export default  ContactListItem;
+export default ContactItem;
 
+
+
+
+
+
+
+
+  //import { createUseStyles } from "react-jss";
+ 
+  // const useStyles = createUseStyles({
+//   item: {
+//     display: "flex",
+//     alignItems: "center",
+//     justifyContent: "center",
+//   },
+// });
+
+  // const classes = useStyles();
