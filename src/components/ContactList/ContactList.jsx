@@ -12,18 +12,16 @@ const ContactList = () => {
   const visibleContacts = useSelector(getVisibleContacts);               
 
   useEffect(() =>
-  // {
-  //   dispatch(operations.getAllContacts());
-  //   }, [dispatch]
-    () => dispatch(operations.getAllContacts()),
-    []
+  {
+    dispatch(operations.getAllContacts());
+    }, [dispatch]                     // () => dispatch(operations.getAllContacts()),  []
   );
 
   return (
     <ul >
       {visibleContacts.map( contact => (
         <ContactItem
-          //key={contact.id}
+             key={contact.id}
           contactID={contact.id}
         />
       ))}
@@ -32,6 +30,14 @@ const ContactList = () => {
 };
 
 export default ContactList;
+
+
+
+
+
+
+
+
 
 
 
