@@ -8,7 +8,7 @@ const ContactItem = ({ contactID }) => {
   
   const dispatch = useDispatch();
 
-  const contact = useSelector(getContactID(contactID)); //from redux
+  const contact = useSelector(getContactID(contactID));                         //from redux
   const { id, name, number } = contact;
 
   const handleDeleteItem = () => dispatch(operations.deleteContact(id));

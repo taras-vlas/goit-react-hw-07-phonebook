@@ -7,8 +7,7 @@ import { useAlert } from "react-alert";
 import { getAllContacts } from '../../redux/phonebook/phonebook-selectors';
 import operations from '../../redux/phonebook/phonebook-operations';
 
-//const INITIAL_STATE = {
-const initialState = {
+const initialState = {                           //INITIAL_STATE
   id: '',  
   name: '',
   number: '',
@@ -19,7 +18,7 @@ const Contacts = () => {
   const dispatch = useDispatch();
  
   const contacts = useSelector(getAllContacts);
-  //const [state, setState] = useState(INITIAL_STATE);
+
   const [state, setState] = useState(initialState);
   const { name, number } = state;
 
