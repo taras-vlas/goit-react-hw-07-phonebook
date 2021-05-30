@@ -1,56 +1,91 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { Component } from 'react';
+//import { useState } from 'react';
+//import { v4 as uuidv4 } from 'uuid';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from "./ContactForm.module.css";
-import { useAlert } from "react-alert";
-import { getAllContacts } from '../../redux/phonebook/phonebook-selectors';
-import operations from '../../redux/phonebook/phonebook-operations';
+//import phonebookActions from '../../redux/phonebook/phonebook-actions';
+import phonebookOperations from '../../redux/phonebook/phonebook-operations';
+import phonebookSelectors from '../../redux/phonebook/phonebook-selectors';
 
-const initialState = {                           //INITIAL_STATE
-  id: '',  
+
+const INITIAL_STATE = {
   name: '',
   number: '',
 };
+             //const [state, setState] = useState(INITIAL_STATE);
 
-const Contacts = () => {
-  const alert = useAlert();
-  const dispatch = useDispatch();
- 
-  const contacts = useSelector(getAllContacts);
+// компонента ContactForm
+class AddContactForm extends Component {
+  state = INITIAL_STATE;
 
-  const [state, setState] = useState(initialState);
-  const { name, number } = state;
-
-  const handleSaveItem = (item) => dispatch(operations.addContact(item));
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newItem = {
-      id: uuidv4(), 
-      name,
-      number: Number(number),
-    };
-
-    if (contacts.some((contact) => contact.name === newItem.name)) {
-      alert.show(`${newItem.name} is already in your contacts`);
-      return;
-    }
-
-    handleSaveItem(newItem);
+// Очистка поля форми     resetForm = () => {
+  resetForm = () => {
+    this.setState({
+      INITIAL_STATE
+      // name: '',
+      // number: '',
+    });
   };
+  
+  //       handleSubmit = (event) => {
+  //         event.preventDefault();
+          
+  //           // if (name && number) {
+  //           // this.props.onCreateContact(
+  //           //   this.state.name,
+  //           //   this.state.number
+  //           // );
+  //           this.props.onCreateContact({
+  //             name: this.state.name,
+  //             number: this.state.number,
+  //           });
+  //           ////   return this.setState({ name: '', number: '' });  // alert (...) is already in contacts`);
+  //           //// }
+  //           //  if (this.props.onCreateContact.some(element => element.name === this.state.name))
+        
+  //           //   return alert.show(`${this.state.name} is already in your contacts`);
+  //           //     this.props.onSubmit(this.state);
 
-  const handleChange = (e) => {
-    setState((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
+  //           this.resetForm();
+  //       };
+ 
+
+  // Iнпут...
+  handleChange = event => {
+    const { name, value } = event.currentTarget;
+ 
+      this.setState(prev => ({
+      ...prev,
+      [name]: value,
     }));
   };
+  // handleChange = ({ target }) => {
+  //   const { name, value } = target;
 
+  //   this.setState({
+  //     [name]: value,
+  //   })
+  // };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { name, number } = this.state;
+
+    if (name && number) {
+      this.props.onCreateContact(this.state.name, String(this.state.number));
+      return this.setState({ name: '', number: '' });
+    }
+
+    return null;
+  };
+
+
+  render() {
+    const { name, number } = this.state;
     
     return (
-      <form className={styles.Form} onSubmit={handleSubmit}>
+      <form className={styles.Form} onSubmit={this.handleSubmit}>
         
           <label className={styles.Label}>
             Name
@@ -62,7 +97,7 @@ const Contacts = () => {
                 title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
                 required
                 value={name}  // // {this.state.name} -  значення передає в локальний стейт
-                onChange={handleChange}
+                onChange={this.handleChange}
             />
           </label>
         
@@ -76,7 +111,7 @@ const Contacts = () => {
                 title="Номер телефона должен состоять из 11-12 цифр и может содержать цифры, пробелы, тире, пузатые скобки и может начинаться с +"
                 required
                 value={number}      // {this.state.number}
-                onChange={ handleChange }
+                onChange={this.handleChange}
             />
           </label>
         
@@ -85,10 +120,31 @@ const Contacts = () => {
             </button>
       </form>
     )
+  }
 }
 
-Contacts.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+// Аргумент mapStateToProps функції connect для надання даних сховища у пропи компонентв   з глобального стейта
+const mapStateToProps = state => ({
+  onCreateContact: phonebookSelectors.getAllContacts(state),
+  // contacts: phonebookSelectors.getAllContacts(state),
+});
+
+// Аргумент mapDispatchToProps может быть либо объектом, либо функцией, которая возвращает либо обычный объект, либо другую функцию
+    const mapDispatchToProps = {
+      onCreateContact: phonebookOperations.addContact,
+    };
+// const mapDispatchToProps = dispatch => ({
+//   onSubmit: text => dispatch(phonebookOperations.addContact(text)),
+// });
+
+
+AddContactForm.propTypes = {
+  onCreateContact: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
 };
 
-export default Contacts;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps)(AddContactForm);
+

@@ -1,6 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
-import actions from "../../redux/phonebook/phonebook-actions";
-import { getFilter } from "../../redux/phonebook/phonebook-selectors";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import phonebookActions from '../../redux/phonebook/phonebook-actions';
+//import phonebookOperations from '../../redux/phonebook/phonebook-operations';
+import phonebookSelectors from '../../redux/phonebook/phonebook-selectors';
 
     import { createUseStyles } from 'react-jss';
 
@@ -30,38 +32,43 @@ import { getFilter } from "../../redux/phonebook/phonebook-selectors";
             }
         });
 
-
-const ContactFilter = () => {
+// Приймає значення з поля фільтра 
+const Filter = ({ value, onChange }) => {
   const classes = useStyles();
-  
-  const dispatch = useDispatch();
-  
-  const filter = useSelector(getFilter);         //from redux
-  
-  const handleFilter = (filterText) =>
-    dispatch(actions.changeFilter(filterText));
 
-  const handleChange = (e) => {
-    const filter = e.target.value;
-
-    handleFilter(filter);
-  };
-
-
-  return (
-    <div className = {classes.Label}>
+   return (
+      <div className = {classes.Label}>
         Find contacts by name
-        <input
+        <input className={classes.Input}
           type="text"
-          value={filter}
           name="filter"
-          onChange={handleChange}
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-          required
+          value={value}
+          //onChange={e => onChange(e.currentTarget.value)} />
+          onChange={onChange}
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+            required
         />
-    </div>
-  );
+      </div>
+    )
+}
+
+// Аргумент mapStateToProps функциії connect для предоставления данных хранилища вашему компоненту
+const mapStateToProps = state => ({
+  value: phonebookSelectors.getFilter(state),
+});
+
+// Аргумент mapDispatchToProps может быть либо объектом, либо функцией, которая возвращает либо обычный объект, либо другую функцию
+const mapDispatchToProps = {
+  onChange: phonebookActions.changeFilter,
+  // onChange: e => (phonebookActions.changeFilter(e.currentTarget.value))
+ 
 };
 
-export default ContactFilter;
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+
+
+Filter.propTypes = {
+  value: PropTypes.string.isRequired,
+  onchange: PropTypes.func.isRequired,
+};

@@ -29,27 +29,7 @@ const store = configureStore({
   devTools: process.env.NODE_ENV === "development",
 });
 
-// export const persistor = persistStore(store);
 export default store;
 
 
 
-
-// import { configureStore } from '@reduxjs/toolkit';
-// import phonebookReducer from './phonebook/phonebook-reducer';
-
-// // const preloadedState = {
-// //   phonebook: {
-// //     contacts: JSON.parse(localStorage.getItem('contacts')) || []
-// //   }
-// // }
-
-// // Створення сховища 
-// const store = configureStore({
-//   reducer: {
-//     phonebook: phonebookReducer
-//   },
-//   //preloadedState
-// });
-
-// export default store;
