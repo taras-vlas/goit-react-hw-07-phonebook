@@ -68,3 +68,34 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+
+
+
+#     Критерии приема
+Создан репозиторий        goit-react-hw-07-phonebook
+Удали код отвечающий за хранение и чтение контактов из локального хранилища.
+Добавь в приложение Телефонной книги работу с бекендом для хранения контактов.
+
+Создай локальный бекенд для разработки при помощи библиотеки 
+json-server    https://github.com/typicode/json-server
+
+Используй этот    
+db.json   https://github.com/goitacademy/react-homework/blob/master/homework-07/db.json
+для базы данных, будет один ендпоинт   /contacts.
+
+Напиши Redux-операции для работы с асинхронными запросами по паттерну  
+request, success и error.
+Добавь селекторы в файл   contacts-selectors.js  и сделай мемоизацию селекторов там, где необходимо.
+
+## src mod-7ReduxAsinc-Viktor
+- Redux Thunk — это промежуточное ПО, позволяющее вызывать создателей действий, которые возвращают функцию вместо объекта действия. Эта функция получает метод обработки магазина, который затем используется для обработки регулярных синхронных действий внутри тела функции после выполнения асинхронных операций.
+- redux-devtools-extension - Это специальное расширение для браузера, которое позволяет легко дебажить redux приложения.
+-  deep-object-diff - small library that can deep diff two JavaScript Objects, including nested structures of arrays and objects.
+
+###   ЗАПУСК
+PS D:\react\goit-react-hw-07-phonebook>   npm start 
+PS D:\react\goit-react-hw-07-phonebook>   npm run api-server    
+- не оновлювати сторінку

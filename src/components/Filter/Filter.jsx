@@ -1,74 +1,74 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import phonebookActions from '../../redux/phonebook/phonebook-actions';
-//import phonebookOperations from '../../redux/phonebook/phonebook-operations';
-import phonebookSelectors from '../../redux/phonebook/phonebook-selectors';
+import contactsSelectors from '../../redux/phonebook/contacts-selectors';
+import { changeFilter } from '../../redux/phonebook/contacts-actions';
+import TextField from "@material-ui/core/TextField";
+import styles from './Filter.module.scss';
 
-    import { createUseStyles } from 'react-jss';
-
-    const useStyles = createUseStyles({
-        Label:{
-            display: 'inline-block',
-            marginBottom: 16,
-            width: 200,
-            fontSize: 16,
-            color: '#171718',
-            cursor: 'pointer',
-            }, 
-         
-        Input: {
-            color: '#171718',
-            font: 'inherit',
-            fontSize: '0.9rem',
-            marginTop: 6,
-            borderRadius: 4,
-            border: '1px solid #9e9d9d',
-            width: 200,
-            outline: 0,
-            '&:focus': {
-                border: '2px solid blue',
-                boxShadow: '1px 1px 3px 1px rgba(41, 107, 250, 0.14)',
-                },
-            }
-        });
-
-// Приймає значення з поля фільтра 
 const Filter = ({ value, onChange }) => {
-  const classes = useStyles();
-
-   return (
-      <div className = {classes.Label}>
+  // <div className={styles.container}>
+  //   <label className={styles.label}>
+  //     Phone book search
+  //     <input
+  //       type="text"
+  //       value={value}
+  //       onChange={onChange}
+  //       className={styles.input}
+  //     />
+  //   </label>
+  // </div>
+   
+      return (
+    <div className={styles.filter}>
+      <h2 className={styles.title}>Contacts</h2>
+        
+        {/* <label className={styles.Label}>
         Find contacts by name
-        <input className={classes.Input}
+          <input className={styles.Input}
           type="text"
           name="filter"
-          value={value}
+          value={filterValue}
+          placeholder="Filter search"
           //onChange={e => onChange(e.currentTarget.value)} />
-          onChange={onChange}
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-            required
-        />
-      </div>
+          onChange={handleChange}
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+          required
+          />
+        </label> */}
+      
+        <div className={styles.HeaderWrapper}>
+          {/* <h3>Find contacts by name</h3> */}
+          <TextField
+            value={value}        
+            onChange={onChange}        
+            label = "Searches by name"       // Фільтрувати            
+          />
+        </div>
+     </div>
     )
-}
+};
 
-// Аргумент mapStateToProps функциії connect для предоставления данных хранилища вашему компоненту
+Filter.defaultProps = {
+  value: '',
+};
+
+Filter.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+
+
 const mapStateToProps = state => ({
-  value: phonebookSelectors.getFilter(state),
+  value: contactsSelectors.getFilter(state),
 });
 
-// Аргумент mapDispatchToProps может быть либо объектом, либо функцией, которая возвращает либо обычный объект, либо другую функцию
-const mapDispatchToProps = {
-  onChange: phonebookActions.changeFilter,
-  // onChange: e => (phonebookActions.changeFilter(e.currentTarget.value))
- 
-};
+const mapDispatchToProps = dispatch => ({
+  onChange: e => dispatch(changeFilter(e.target.value)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
 
 
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
-  onchange: PropTypes.func.isRequired,
-};
+
