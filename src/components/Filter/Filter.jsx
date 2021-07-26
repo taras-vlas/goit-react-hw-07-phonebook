@@ -43,6 +43,7 @@ const Filter = ({ value, onChange }) => {
             value={value}        
             onChange={onChange}        
             label = "Searches by name"       // Фільтрувати            
+            //disabled={isLoading}
           />
         </div>
      </div>
